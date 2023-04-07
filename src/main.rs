@@ -1,9 +1,17 @@
+use std::collections::HashSet;
+use std::sync::Mutex;
+
+use axum::extract::ws;
 use axum::{response::IntoResponse, routing::get, Json, Router};
 // use axum_macros::debug_handler;
 use serde::{Deserialize, Serialize};
+use tokio::sync::broadcast;
 
 #[tokio::main]
 async fn main() {
+    let users = Mutex::new(HashSet::new());
+    let (tx, _rx) = broadcast::channel(100);
+
     let app = Router::new().route("/user", get(get_user));
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
         .serve(app.into_make_service())
