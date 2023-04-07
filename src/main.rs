@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/user", get(test()));
+    let app = Router::new().route("/user", get(get_user));
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
         .serve(app.into_make_service())
         .await
@@ -24,8 +24,4 @@ async fn get_user() -> impl IntoResponse {
         name: "Thomas".to_string(),
         age: 9,
     })
-}
-#[axum_macros::debug_handler]
-async fn test() -> String {
-    "Test".to_owned()
 }
